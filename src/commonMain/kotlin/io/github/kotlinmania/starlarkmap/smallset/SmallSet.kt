@@ -193,9 +193,19 @@ class SmallSet<T> private constructor(
         entries.reverse()
     }
 
-    /** Iterator over union of two sets. */
+    /** Iterator over elements of this set which are not in the other set. */
+    fun difference(other: SmallSet<T>): Sequence<T> {
+        return iter().filter { !other.contains(it) }
+    }
+
+    /**
+     * Iterator over union of two sets.
+     *
+     * Iteration order is: elements of this set followed by elements in the
+     * other set not present in this set.
+     */
     fun union(other: SmallSet<T>): Sequence<T> {
-        return iter() + other.iter().filter { !contains(it) }
+        return iter() + other.difference(this)
     }
 
     /** Equal if entries are equal in iteration order. */
