@@ -16,4 +16,4 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "starlarkmap"
+rootProject.name = "starlarkmap-kotlin"

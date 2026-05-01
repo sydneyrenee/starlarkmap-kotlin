@@ -114,10 +114,10 @@ mavenPublishing {
         signAllPublications()
     }
 
-    coordinates(group.toString(), "starlarkmap", version.toString())
+    coordinates(group.toString(), "starlarkmap-kotlin", version.toString())
 
     pom {
-        name.set("starlarkmap")
+        name.set("starlarkmap-kotlin")
         description.set("Kotlin Multiplatform port of facebook/starlark-rust's starlark_map crate - Map implementations with starlark-specific optimizations")
         inceptionYear.set("2026")
         url.set("https://github.com/KotlinMania/starlarkmap-kotlin")
