@@ -29,7 +29,7 @@ package io.github.kotlinmania.starlarkmap.sorting.insertion
  * The array is sorted up to [nextUnsorted],
  * and the element to insert is at [nextUnsorted].
  */
-private inline fun <T> findInsertionPoint(
+internal inline fun <T> findInsertionPoint(
     array: T,
     nextUnsorted: Int,
     less: (T, Int, Int) -> Boolean,
