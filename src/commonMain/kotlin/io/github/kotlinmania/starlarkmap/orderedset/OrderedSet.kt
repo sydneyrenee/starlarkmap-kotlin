@@ -22,6 +22,7 @@ package io.github.kotlinmania.starlarkmap.orderedset
 import io.github.kotlinmania.starlarkmap.Equivalent
 import io.github.kotlinmania.starlarkmap.Hashed
 import io.github.kotlinmania.starlarkmap.smallset.SmallSet
+import io.github.kotlinmania.starlarkmap.smallset.sort
 
 /**
  * [SmallSet] wrapper, but equality and hash of self depends on iteration order.
@@ -31,7 +32,7 @@ import io.github.kotlinmania.starlarkmap.smallset.SmallSet
  */
 class OrderedSet<T> internal constructor(
     internal val inner: SmallSet<T>,
-) : Iterable<T>, Comparable<OrderedSet<T>> {
+) : Iterable<T> {
 
     companion object {
         /** Create a new empty set. */
@@ -139,11 +140,6 @@ class OrderedSet<T> internal constructor(
     fun clear() = inner.clear()
 
     /**
-     * Sort the set.
-     */
-    fun sort() = inner.sort()
-
-    /**
      * Iterate over the union of two sets.
      */
     fun union(other: OrderedSet<T>): Sequence<T> =
@@ -168,7 +164,7 @@ class OrderedSet<T> internal constructor(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is OrderedSet<*>) return false
-        return inner.eqOrdered(@Suppress("UNCHECKED_CAST") (other.inner as SmallSet<T>))
+        return iter().toList() == other.iter().toList()
     }
 
     /**
@@ -180,26 +176,6 @@ class OrderedSet<T> internal constructor(
             result = 31 * result + (t?.hashCode() ?: 0)
         }
         return result
-    }
-
-    /**
-     * Compare two [OrderedSet]s lexicographically by their iteration order.
-     */
-    override fun compareTo(other: OrderedSet<T>): Int {
-        val thisIter = iter().iterator()
-        val otherIter = other.iter().iterator()
-        while (thisIter.hasNext() && otherIter.hasNext()) {
-            val t = thisIter.next()
-            val o = otherIter.next()
-            @Suppress("UNCHECKED_CAST")
-            val cmp = (t as Comparable<T>).compareTo(o)
-            if (cmp != 0) return cmp
-        }
-        return when {
-            thisIter.hasNext() -> 1
-            otherIter.hasNext() -> -1
-            else -> 0
-        }
     }
 
     override fun toString(): String {
@@ -216,3 +192,25 @@ class OccupiedError<T>(
     /** The value that was already in the set. */
     val occupied: T,
 )
+
+/**
+ * Sort the set.
+ */
+fun <T : Comparable<T>> OrderedSet<T>.sort() = inner.sort()
+
+/**
+ * Compare two [OrderedSet]s lexicographically by their iteration order.
+ */
+operator fun <T : Comparable<T>> OrderedSet<T>.compareTo(other: OrderedSet<T>): Int {
+    val thisIter = iter().iterator()
+    val otherIter = other.iter().iterator()
+    while (thisIter.hasNext() && otherIter.hasNext()) {
+        val cmp = thisIter.next().compareTo(otherIter.next())
+        if (cmp != 0) return cmp
+    }
+    return when {
+        thisIter.hasNext() -> 1
+        otherIter.hasNext() -> -1
+        else -> 0
+    }
+}

@@ -182,12 +182,6 @@ class SmallSet<T> private constructor(
         return true
     }
 
-    /** Sort entries. */
-    @Suppress("UNCHECKED_CAST")
-    fun sort() {
-        entries.sortWith(compareBy { it.key() as Comparable<Any> })
-    }
-
     /** Reverse the iteration order of the set. */
     fun reverse() {
         entries.reverse()
@@ -228,4 +222,9 @@ class SmallSet<T> private constructor(
     }
 
     operator fun iterator(): Iterator<T> = iter().iterator()
+}
+
+/** Sort entries. */
+fun <T : Comparable<T>> SmallSet<T>.sort() {
+    entries.sortWith(compareBy { it.key() })
 }

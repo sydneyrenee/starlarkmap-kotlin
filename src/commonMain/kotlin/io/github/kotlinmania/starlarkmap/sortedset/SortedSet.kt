@@ -21,6 +21,7 @@ package io.github.kotlinmania.starlarkmap.sortedset
 
 import io.github.kotlinmania.starlarkmap.Equivalent
 import io.github.kotlinmania.starlarkmap.orderedset.OrderedSet
+import io.github.kotlinmania.starlarkmap.orderedset.sort
 import io.github.kotlinmania.starlarkmap.smallset.SmallSet
 import io.github.kotlinmania.starlarkmap.sortedvec.SortedVec
 
