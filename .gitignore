@@ -7,6 +7,7 @@ local.properties
 .DS_Store
 kotlin-js-store/
 .kotlin/
+tmp/starlark_map/
 
 # ast_distance build artifacts (binary committed; cmake build dir regenerated)
 tools/ast_distance/build/
