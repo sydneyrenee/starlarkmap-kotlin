@@ -5,7 +5,10 @@ build/
 *.iml
 local.properties
 .DS_Store
-kotlin-js-store/
+kotlin-js-store/*
+!kotlin-js-store/yarn.lock
+!kotlin-js-store/wasm/
+!kotlin-js-store/wasm/yarn.lock
 .kotlin/
 tmp/starlark_map/
 
