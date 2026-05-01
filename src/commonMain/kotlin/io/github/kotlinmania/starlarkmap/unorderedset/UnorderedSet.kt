@@ -22,6 +22,10 @@ package io.github.kotlinmania.starlarkmap.unorderedset
 import io.github.kotlinmania.starlarkmap.Equivalent
 import io.github.kotlinmania.starlarkmap.Hashed
 import io.github.kotlinmania.starlarkmap.StarlarkHashValue
+import io.github.kotlinmania.starlarkmap.unorderedmap.RawEntryBuilderMut as MapRawEntryBuilderMut
+import io.github.kotlinmania.starlarkmap.unorderedmap.RawEntryMut as MapRawEntryMut
+import io.github.kotlinmania.starlarkmap.unorderedmap.RawOccupiedEntryMut as MapRawOccupiedEntryMut
+import io.github.kotlinmania.starlarkmap.unorderedmap.RawVacantEntryMut as MapRawVacantEntryMut
 import io.github.kotlinmania.starlarkmap.unorderedmap.UnorderedMap
 
 /**
@@ -114,16 +118,16 @@ class UnorderedSet<T> internal constructor(
  * Builder for [RawEntryMut].
  */
 class RawEntryBuilderMut<T>(
-    private val entry: starlarkmap.unorderedmap.RawEntryBuilderMut<T, Unit>,
+    private val entry: MapRawEntryBuilderMut<T, Unit>,
 ) {
     /**
      * Find the entry for a key.
      */
     fun fromEntry(value: T): RawEntryMut<T> {
         return when (val raw = entry.fromKey(value)) {
-            is starlarkmap.unorderedmap.RawEntryMut.Occupied ->
+            is MapRawEntryMut.Occupied ->
                 RawEntryMut.Occupied(RawOccupiedEntryMut(raw.entry))
-            is starlarkmap.unorderedmap.RawEntryMut.Vacant ->
+            is MapRawEntryMut.Vacant ->
                 RawEntryMut.Vacant(RawVacantEntryMut(raw.entry))
         }
     }
@@ -138,9 +142,9 @@ class RawEntryBuilderMut<T>(
      */
     fun fromHash(hash: StarlarkHashValue, isMatch: (T) -> Boolean): RawEntryMut<T> {
         return when (val raw = entry.fromHash(hash, isMatch)) {
-            is starlarkmap.unorderedmap.RawEntryMut.Occupied ->
+            is MapRawEntryMut.Occupied ->
                 RawEntryMut.Occupied(RawOccupiedEntryMut(raw.entry))
-            is starlarkmap.unorderedmap.RawEntryMut.Vacant ->
+            is MapRawEntryMut.Vacant ->
                 RawEntryMut.Vacant(RawVacantEntryMut(raw.entry))
         }
     }
@@ -160,7 +164,7 @@ sealed class RawEntryMut<T> {
  * Reference to an occupied entry in a [UnorderedSet].
  */
 class RawOccupiedEntryMut<T>(
-    private val entry: starlarkmap.unorderedmap.RawOccupiedEntryMut<T, Unit>,
+    private val entry: MapRawOccupiedEntryMut<T, Unit>,
 ) {
     /** Remove the entry. */
     fun remove(): T = entry.removeEntry().first
@@ -173,7 +177,7 @@ class RawOccupiedEntryMut<T>(
  * Reference to a vacant entry in a [UnorderedSet].
  */
 class RawVacantEntryMut<T>(
-    private val entry: starlarkmap.unorderedmap.RawVacantEntryMut<T, Unit>,
+    private val entry: MapRawVacantEntryMut<T, Unit>,
 ) {
     /** Insert an entry to the set. Computes the hash of the key. */
     fun insert(value: T) {
