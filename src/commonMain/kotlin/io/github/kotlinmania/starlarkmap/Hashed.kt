@@ -103,24 +103,6 @@ class Hashed<out K> internal constructor(
     fun fmt(): String = key.toString()
 
     /**
-     * Compare the underlying key if both keys are comparable.
-     */
-    @Suppress("UNCHECKED_CAST")
-    fun partialCmp(other: Hashed<@UnsafeVariance K>): Int? {
-        val comparable = key as? Comparable<Any?> ?: return null
-        return comparable.compareTo(other.key)
-    }
-
-    /**
-     * Compare the underlying key.
-     */
-    @Suppress("UNCHECKED_CAST")
-    fun cmp(other: Hashed<@UnsafeVariance K>): Int {
-        val comparable = key as Comparable<Any?>
-        return comparable.compareTo(other.key)
-    }
-
-    /**
      * Convert this hash/key pair to a borrowed reference. Kotlin references are already
      * references, so this returns [this].
      */
@@ -169,4 +151,18 @@ class Hashed<out K> internal constructor(
  */
 fun interface StarlarkStrongHashable {
     fun writeStrongHash(hasher: StarlarkHasher)
+}
+
+/**
+ * Compare the underlying key.
+ */
+fun <K : Comparable<K>> Hashed<K>.partialCmp(other: Hashed<K>): Int? {
+    return key().compareTo(other.key())
+}
+
+/**
+ * Compare the underlying key.
+ */
+fun <K : Comparable<K>> Hashed<K>.cmp(other: Hashed<K>): Int {
+    return key().compareTo(other.key())
 }
