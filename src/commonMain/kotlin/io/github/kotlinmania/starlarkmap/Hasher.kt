@@ -7,7 +7,7 @@ package io.github.kotlinmania.starlarkmap
  * Copyright (c) 2025 Sydney Renee, The Solace Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not import this file except in compliance with the License.
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
  *     https://www.apache.org/licenses/LICENSE-2.0
@@ -28,6 +28,13 @@ package io.github.kotlinmania.starlarkmap
  * (matching common target architectures).
  */
 class StarlarkHasher {
+    companion object {
+        /**
+         * Creates a new hasher.
+         */
+        fun new(): StarlarkHasher = StarlarkHasher()
+    }
+
     private val fx: FxHasher64 = FxHasher64()
 
     /**
@@ -66,6 +73,14 @@ class StarlarkHasher {
     fun writeU64(i: ULong) {
         fx.writeU64(i)
     }
+
+    fun writeU128(low: ULong, high: ULong = 0UL) {
+        fx.writeU128(low, high)
+    }
+
+    fun writeUsize(i: ULong) {
+        fx.writeUsize(i)
+    }
 }
 
 /**
@@ -96,6 +111,15 @@ private class FxHasher64 {
 
     fun writeU64(i: ULong) {
         hash = hashWord(hash, i)
+    }
+
+    fun writeU128(low: ULong, high: ULong) {
+        writeU64(low)
+        writeU64(high)
+    }
+
+    fun writeUsize(i: ULong) {
+        writeU64(i)
     }
 
     fun finish(): ULong = hash
