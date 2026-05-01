@@ -25,7 +25,7 @@ package io.github.kotlinmania.starlarkmap.sortedvec
  */
 class SortedVec<T> private constructor(
     private val vec: MutableList<T>,
-) : Iterable<T>, Comparable<SortedVec<T>> {
+) : Iterable<T> {
 
     companion object {
         /** Construct an empty [SortedVec]. */
@@ -57,7 +57,7 @@ class SortedVec<T> private constructor(
         /**
          * Create a [SortedVec] from an iterable, sorting the collected elements.
          */
-        fun <T : Comparable<T>> fromIterator(iter: Iterable<T>): SortedVec<T> {
+        fun <T : Comparable<T>> fromIter(iter: Iterable<T>): SortedVec<T> {
             val vec = iter.toMutableList()
             vec.sort()
             return SortedVec(vec)
@@ -66,6 +66,8 @@ class SortedVec<T> private constructor(
 
     /** Iterate over the elements. */
     fun iter(): Sequence<T> = vec.asSequence()
+
+    fun intoIter(): Iterator<T> = vec.iterator()
 
     override fun iterator(): Iterator<T> = vec.iterator()
 
@@ -84,25 +86,23 @@ class SortedVec<T> private constructor(
      */
     override fun hashCode(): Int = vec.hashCode()
 
-    /**
-     * Lexicographic comparison.
-     */
-    override fun compareTo(other: SortedVec<T>): Int {
-        val thisIter = vec.iterator()
-        val otherIter = other.vec.iterator()
-        while (thisIter.hasNext() && otherIter.hasNext()) {
-            val t = thisIter.next()
-            val o = otherIter.next()
-            @Suppress("UNCHECKED_CAST")
-            val cmp = (t as Comparable<T>).compareTo(o)
-            if (cmp != 0) return cmp
-        }
-        return when {
-            thisIter.hasNext() -> 1
-            otherIter.hasNext() -> -1
-            else -> 0
-        }
-    }
-
     override fun toString(): String = vec.toString()
+}
+
+/**
+ * Lexicographic comparison, matching Rust's derived `Ord` implementation for
+ * `SortedVec<T>` where `T: Ord`.
+ */
+operator fun <T : Comparable<T>> SortedVec<T>.compareTo(other: SortedVec<T>): Int {
+    val thisIter = iter().iterator()
+    val otherIter = other.iter().iterator()
+    while (thisIter.hasNext() && otherIter.hasNext()) {
+        val cmp = thisIter.next().compareTo(otherIter.next())
+        if (cmp != 0) return cmp
+    }
+    return when {
+        thisIter.hasNext() -> 1
+        otherIter.hasNext() -> -1
+        else -> 0
+    }
 }
