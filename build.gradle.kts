@@ -5,12 +5,12 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 plugins {
     kotlin("multiplatform") version "2.3.20"
     kotlin("plugin.serialization") version "2.3.20"
-    id("com.android.kotlin.multiplatform.library") version "8.6.0"
+    id("com.android.kotlin.multiplatform.library") version "9.2.0"
     id("com.vanniktech.maven.publish") version "0.30.0"
 }
 
 group = "io.github.kotlinmania"
-version = "0.1.0"
+version = "0.1.1"
 
 val androidSdkDir: String? =
     providers.environmentVariable("ANDROID_SDK_ROOT").orNull
@@ -33,6 +33,7 @@ kotlin {
     }
 
     compilerOptions {
+        allWarningsAsErrors.set(true)
         freeCompilerArgs.add("-Xexpect-actual-classes")
     }
 
