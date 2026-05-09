@@ -1,47 +1,57 @@
-# starlarkmap-kotlin
+# starlarkmap-kotlin in Kotlin
 
-Kotlin Multiplatform port of [`starlark_map`](https://github.com/facebook/starlark-rust/tree/main/starlark_map),
-the supporting map/set/vec crate from Facebook's `starlark-rust`. Used by `starlark-kotlin`
-and any other consumer that needs `SmallMap`, `OrderedMap`, `SortedMap`, `UnorderedMap`,
-`Vec2`, `Hashed`, etc. with the same semantics as upstream.
+[![GitHub link](https://img.shields.io/badge/GitHub-KotlinMania%2Fstarlarkmap--kotlin-blue.svg)](https://github.com/KotlinMania/starlarkmap-kotlin)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.kotlinmania/starlarkmap-kotlin)](https://central.sonatype.com/artifact/io.github.kotlinmania/starlarkmap-kotlin)
+[![Build status](https://img.shields.io/github/actions/workflow/status/KotlinMania/starlarkmap-kotlin/ci.yml?branch=main)](https://github.com/KotlinMania/starlarkmap-kotlin/actions)
 
-Upstream: <https://github.com/facebook/starlark-rust>
+This is a Kotlin Multiplatform line-by-line transliteration port of [`facebook/starlark-rus`](https://github.com/facebook/starlark-rust).
 
-## Status
+**Original Project:** This port is based on [`facebook/starlark-rus`](https://github.com/facebook/starlark-rust). All design credit and project intent belong to the upstream authors; this repository is a faithful port to Kotlin Multiplatform with no behavioural changes intended.
 
-Build infrastructure scaffolding only. Source ports live under
-`src/commonMain/kotlin/io/github/kotlinmania/starlarkmap/` and are added file-by-file
-as upstream `tmp/starlark_map/src/<module>.rs` files are translated.
+### Porting status
 
-## Namespace
+This is an **in-progress port**. The goal is feature parity with the upstream Rust crate while providing a native Kotlin Multiplatform API. Every Kotlin file carries a `// port-lint: source <path>` header naming its upstream Rust counterpart so the AST-distance tool can track provenance.
 
-```
-io.github.kotlinmania.starlarkmap
-io.github.kotlinmania.starlarkmap.smallmap
-io.github.kotlinmania.starlarkmap.smallset
-io.github.kotlinmania.starlarkmap.sortedmap
-io.github.kotlinmania.starlarkmap.sortedset
-io.github.kotlinmania.starlarkmap.sortedvec
-io.github.kotlinmania.starlarkmap.unorderedmap
-io.github.kotlinmania.starlarkmap.unorderedset
-io.github.kotlinmania.starlarkmap.vec2
+---
+
+## About this Kotlin port
+
+### Installation
+
+```kotlin
+dependencies {
+    implementation("io.github.kotlinmania:starlarkmap-kotlin:0.1.2")
+}
 ```
 
-## Build
+### Building
 
 ```bash
 ./gradlew build
 ./gradlew test
-./gradlew jvmTest
-./gradlew macosArm64Test
 ```
 
-## Maven coordinates
+### Targets
 
-```
-io.github.kotlinmania:starlarkmap:0.1.0
-```
+- macOS arm64
+- Linux x64
+- Windows mingw-x64
+- iOS arm64 / simulator-arm64 (Swift export + XCFramework)
+- JS (browser + Node.js)
+- Wasm-JS (browser + Node.js)
+- Android (API 24+)
 
-## License
+### Porting guidelines
 
-Apache-2.0. See [LICENSE](./LICENSE).
+See [AGENTS.md](AGENTS.md) and [CLAUDE.md](CLAUDE.md) for translator discipline, port-lint header convention, and Rust → Kotlin idiom mapping.
+
+### License
+
+This Kotlin port is distributed under the same Apache-2.0 license as the upstream [`facebook/starlark-rus`](https://github.com/facebook/starlark-rust). See [LICENSE](LICENSE) (and any sibling `LICENSE-*` / `NOTICE` files mirrored from upstream) for the full text.
+
+Original work copyrighted by the starlark-rus authors.  
+Kotlin port: Copyright (c) 2026 Sydney Renee and The Solace Project.
+
+### Acknowledgments
+
+Thanks to the [`facebook/starlark-rus`](https://github.com/facebook/starlark-rust) maintainers and contributors for the original Rust implementation. This port reproduces their work in Kotlin Multiplatform; bug reports about upstream design or behavior should go to the upstream repository.
