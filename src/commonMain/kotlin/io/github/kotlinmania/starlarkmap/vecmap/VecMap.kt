@@ -51,8 +51,8 @@ internal class VecMap<K, V> private constructor(
     }
 
     fun getIndexOfHashedRaw(hash: StarlarkHashValue, eq: (K) -> Boolean): Int? {
-        val hashes = buckets.bbb()
-        val pairs = buckets.aaa()
+        val hashes = buckets.secondElements()
+        val pairs = buckets.firstElements()
         var i = 0
         while (i < hashes.size) {
             i = findHashInArray(hashes, hash, i) ?: return null
@@ -85,21 +85,21 @@ internal class VecMap<K, V> private constructor(
 
     /** Replace the value at `index`, keeping the existing key/hash. */
     fun setValue(index: Int, value: V) {
-        val pairs = buckets.aaaMut()
+        val pairs = buckets.firstElementsMut()
         val key = pairs[index].first
         pairs[index] = Pair(key, value)
     }
 
     /** Read the value at `index` without bounds checking — caller must guarantee `index < len()`. */
-    fun valueAt(index: Int): V = buckets.aaa()[index].second
+    fun valueAt(index: Int): V = buckets.firstElements()[index].second
 
     /** Read the key at `index` without bounds checking. */
-    fun keyAt(index: Int): K = buckets.aaa()[index].first
+    fun keyAt(index: Int): K = buckets.firstElements()[index].first
 
     /** Read the [Hashed] key at `index` without bounds checking. */
     fun hashedKeyAt(index: Int): Hashed<K> {
-        val (k, _) = buckets.aaa()[index]
-        val h = buckets.bbb()[index]
+        val (k, _) = buckets.firstElements()[index]
+        val h = buckets.secondElements()[index]
         return Hashed.newUnchecked(h, k)
     }
 
@@ -119,15 +119,15 @@ internal class VecMap<K, V> private constructor(
         return Pair(Hashed.newUnchecked(hash, pair.first), pair.second)
     }
 
-    fun values(): Sequence<V> = buckets.aaa().asSequence().map { it.second }
+    fun values(): Sequence<V> = buckets.firstElements().asSequence().map { it.second }
 
     fun valuesMut(): Sequence<V> = values()
 
-    fun keys(): Sequence<K> = buckets.aaa().asSequence().map { it.first }
+    fun keys(): Sequence<K> = buckets.firstElements().asSequence().map { it.first }
 
     fun intoIter(): Iterator<Pair<K, V>> = iter().iterator()
 
-    fun iter(): Sequence<Pair<K, V>> = buckets.aaa().asSequence()
+    fun iter(): Sequence<Pair<K, V>> = buckets.firstElements().asSequence()
 
     fun iterHashed(): Sequence<Pair<Hashed<K>, V>> = buckets.iter().map { (pair, hash) ->
         Pair(Hashed.newUnchecked(hash, pair.first), pair.second)
@@ -137,15 +137,15 @@ internal class VecMap<K, V> private constructor(
         Pair(Hashed.newUnchecked(hash, pair.first), pair.second)
     }.iterator()
 
-    fun iterMut(): Sequence<Pair<K, V>> = buckets.aaaMut().asSequence()
+    fun iterMut(): Sequence<Pair<K, V>> = buckets.firstElementsMut().asSequence()
 
-    fun iterMutUnchecked(): Sequence<Pair<K, V>> = buckets.aaaMut().asSequence()
+    fun iterMutUnchecked(): Sequence<Pair<K, V>> = buckets.firstElementsMut().asSequence()
 
     /** Equal if entries are equal in the iterator order. */
     fun eqOrdered(other: VecMap<K, V>): Boolean {
         // Compare hashes before keys/values: hash mismatch short-circuits faster than
         // walking equal pairs.
-        return buckets.bbb() == other.buckets.bbb() && buckets.aaa() == other.buckets.aaa()
+        return buckets.secondElements() == other.buckets.secondElements() && buckets.firstElements() == other.buckets.firstElements()
     }
 
     /** Hash entries in the iterator order. */
@@ -159,8 +159,8 @@ internal class VecMap<K, V> private constructor(
     }
 
     fun reverse() {
-        buckets.aaaMut().reverse()
-        buckets.bbbMut().reverse()
+        buckets.firstElementsMut().reverse()
+        buckets.secondElementsMut().reverse()
     }
 
     fun retain(f: (K, V) -> Boolean) {
@@ -174,5 +174,5 @@ internal fun <K : Comparable<K>, V> VecMap<K, V>.sortKeys() {
 
 internal fun <K : Comparable<K>, V> VecMap<K, V>.isSortedByKey(): Boolean {
     // Check if all consecutive pairs are in sorted order.
-    return buckets.aaa().asSequence().windowed(2).all { (a, b) -> a.first <= b.first }
+    return buckets.firstElements().asSequence().windowed(2).all { (a, b) -> a.first <= b.first }
 }
