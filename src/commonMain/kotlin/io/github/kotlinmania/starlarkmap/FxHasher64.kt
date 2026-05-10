@@ -20,11 +20,10 @@ package io.github.kotlinmania.starlarkmap
  */
 
 /**
- * Kotlin port of Rust `fxhash::FxHasher64`.
+ * Fast non-cryptographic 64-bit hash function implementation.
  *
- * No upstream source file exists under `tmp/starlark_map/` because `fxhash` is an external
- * crate dependency; this file provides the required implementation for Kotlin ports that
- * embed `FxHasher64` (notably `hasher.rs` -> [StarlarkHasher]).
+ * This hasher uses a simple multiplication-based algorithm optimized for speed
+ * and is used as the underlying hash implementation for [StarlarkHasher].
  */
 internal class FxHasher64 {
     private var hash: ULong = 0UL
@@ -62,10 +61,10 @@ internal class FxHasher64 {
 }
 
 /**
- * Minimal stand-in for Rust `u128` in ports that need a stable two-word value.
+ * Represents a 128-bit unsigned integer as two 64-bit words.
  *
- * Stored as `(low, high)` in little-endian word order so that `low` matches
- * `i as u64` and `high` matches `(i >> 64) as u64` in Rust.
+ * Stored in little-endian word order: [low] contains the lower 64 bits,
+ * and [high] contains the upper 64 bits.
  */
 data class U128(
     val low: ULong,
