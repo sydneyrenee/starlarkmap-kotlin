@@ -75,13 +75,13 @@ class Vec2<A, B> private constructor(
     fun get(index: Int): Pair<A, B>? =
         if (index in 0 until len()) getUnchecked(index) else null
 
-    fun aaa(): List<A> = a
+    fun firstElements(): List<A> = a
 
-    fun aaaMut(): MutableList<A> = a
+    fun firstElementsMut(): MutableList<A> = a
 
-    fun bbb(): List<B> = b
+    fun secondElements(): List<B> = b
 
-    fun bbbMut(): MutableList<B> = b
+    fun secondElementsMut(): MutableList<B> = b
 
     /** Read entry at index without bounds checking — caller must ensure `index < len()`. */
     fun getUnchecked(index: Int): Pair<A, B> = Pair(a[index], b[index])
