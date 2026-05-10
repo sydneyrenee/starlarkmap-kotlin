@@ -29,9 +29,8 @@ import io.github.kotlinmania.starlarkmap.vecmap.iter.Values as VecMapValues
 /**
  * Iterator types for [SmallMap][starlarkmap.smallmap.SmallMap].
  *
- * `def_iter!()` and `def_double_ended_iter!()` macro expansions.
- *
- * In Kotlin, they delegate to the corresponding `vec_map` iterator types.
+ * These iterators delegate to the corresponding VecMap iterator implementations,
+ * providing iteration over key-value pairs, keys, values, and hashed entries.
  */
 
 internal class IterHashed<K, V>(
