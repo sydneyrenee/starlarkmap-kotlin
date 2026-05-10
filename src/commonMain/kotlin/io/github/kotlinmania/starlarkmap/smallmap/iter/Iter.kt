@@ -27,7 +27,7 @@ import io.github.kotlinmania.starlarkmap.vecmap.iter.Keys as VecMapKeys
 import io.github.kotlinmania.starlarkmap.vecmap.iter.Values as VecMapValues
 
 /**
- * Iterator types for [SmallMap][starlarkmap.smallmap.SmallMap].
+ * Iterator types for [SmallMap][io.github.kotlinmania.starlarkmap.smallmap.SmallMap].
  *
  * These iterators delegate to the corresponding VecMap iterator implementations,
  * providing iteration over key-value pairs, keys, values, and hashed entries.
