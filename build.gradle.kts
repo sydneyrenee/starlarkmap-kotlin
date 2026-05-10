@@ -158,19 +158,13 @@ rootProject.extensions.configure<NodeJsRootExtension>("kotlinNodeJs") {
 
 mavenPublishing {
     publishToMavenCentral()
-    val signingConfigured =
-        providers.gradleProperty("signingInMemoryKey").isPresent ||
-            providers.gradleProperty("signing.keyId").isPresent ||
-            providers.environmentVariable("SIGNING_KEY").isPresent
-    if (signingConfigured) {
-        signAllPublications()
-    }
+    signAllPublications()
 
     coordinates(group.toString(), "starlarkmap-kotlin", version.toString())
 
     pom {
         name.set("starlarkmap-kotlin")
-        description.set("Kotlin Multiplatform port of facebook/starlark-rust's starlark_map crate - Map implementations with starlark-specific optimizations")
+        description.set("Kotlin Multiplatform port of facebook/starlark-rust starlark_map - Map and set implementations using hash and ordering")
         inceptionYear.set("2026")
         url.set("https://github.com/KotlinMania/starlarkmap-kotlin")
 
@@ -197,4 +191,18 @@ mavenPublishing {
             developerConnection.set("scm:git:ssh://github.com/KotlinMania/starlarkmap-kotlin.git")
         }
     }
+}
+
+tasks.register("test") {
+    group = "verification"
+    description =
+        "Runs a portable test suite (macOS + JS + WasmJS). Android and non-host native targets are intentionally excluded."
+
+    val defaultTestTasks = listOf(
+        "macosArm64Test",
+        "jsNodeTest",
+        "wasmJsNodeTest",
+    )
+
+    dependsOn(defaultTestTasks.mapNotNull { taskName -> tasks.findByName(taskName) })
 }

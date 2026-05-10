@@ -88,16 +88,21 @@ ignoring attempt to set the entry option...
     });
 
   return function processFile(content, file, done) {
-    controller.bundle().then(() => {
-      file.path = normalize(file.path); // eslint-disable-line no-param-reassign
+    controller
+      .bundle()
+      .then(() => {
+        file.path = normalize(file.path); // eslint-disable-line no-param-reassign
 
-      const transformedFilePath = transformPath(getPathKey(file.path, true));
-      const bundleContent = controller.bundlesContent[transformedFilePath];
+        const transformedFilePath = transformPath(getPathKey(file.path, true));
+        const bundleContent = controller.bundlesContent[transformedFilePath];
 
-      file.path = transformedFilePath;
+        file.path = transformedFilePath;
 
-      done(null, bundleContent);
-    });
+        done(null, bundleContent);
+      })
+      .catch((error) => {
+        done(error);
+      });
   };
 }
 
