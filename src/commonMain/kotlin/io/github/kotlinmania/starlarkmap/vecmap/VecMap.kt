@@ -144,7 +144,7 @@ internal class VecMap<K, V> private constructor(
     /** Equal if entries are equal in the iterator order. */
     fun eqOrdered(other: VecMap<K, V>): Boolean {
         // Compare hashes before keys/values: hash mismatch short-circuits faster than
-        // walking equal pairs. Mirrors vec_map.rs:264.
+        // walking equal pairs.
         return buckets.secondElements() == other.buckets.secondElements() && buckets.firstElements() == other.buckets.firstElements()
     }
 
@@ -173,6 +173,6 @@ internal fun <K : Comparable<K>, V> VecMap<K, V>.sortKeys() {
 }
 
 internal fun <K : Comparable<K>, V> VecMap<K, V>.isSortedByKey(): Boolean {
-    // Mirrors vec_map.rs:253 self.buckets.aaa().windows(2).all(|w| w[0].0 <= w[1].0)
+    // Check if all consecutive pairs are in sorted order.
     return buckets.firstElements().asSequence().windowed(2).all { (a, b) -> a.first <= b.first }
 }
