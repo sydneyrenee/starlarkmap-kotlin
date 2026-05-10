@@ -82,28 +82,30 @@ defaulting ${newOptions.output.filename} to [name].js.`.trim()
   _bundle() {
     this.isActive = true;
 
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       if (this.webpackOptions.watch === true) {
         console.log('Webpack starts watching...');
         this.compiler = webpack(this.webpackOptions, (err, stats) =>
-          this.handleBuildResult(err, stats, resolve)
+          this.handleBuildResult(err, stats, resolve, reject)
         );
 
         this.setupExitHandler(this.compiler);
       } else {
         this.compiler = webpack(this.webpackOptions).run((err, stats) =>
-          this.handleBuildResult(err, stats, resolve)
+          this.handleBuildResult(err, stats, resolve, reject)
         );
       }
     });
   }
 
-  handleBuildResult(err, stats, resolve) {
+  handleBuildResult(err, stats, resolve, reject) {
     if (err) {
       console.error(err.stack || err);
       if (err.details) {
         console.error(err.details);
       }
+      this.isActive = false;
+      reject(err);
       return;
     }
 
