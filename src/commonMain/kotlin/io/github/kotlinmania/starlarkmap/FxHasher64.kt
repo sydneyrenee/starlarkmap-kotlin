@@ -109,14 +109,20 @@ private fun write64(initial: ULong, bytes: ByteArray): ULong {
 }
 
 private fun readU32Le(bytes: ByteArray, offset: Int): UInt {
-    return (bytes[offset + 0].toUByte().toUInt()) or
+    require(offset >= 0 && offset + 4 <= bytes.size) {
+        "readU32Le requires at least 4 bytes from offset=$offset, size=${bytes.size}"
+    }
+    return (bytes[offset].toUByte().toUInt()) or
         (bytes[offset + 1].toUByte().toUInt() shl 8) or
         (bytes[offset + 2].toUByte().toUInt() shl 16) or
         (bytes[offset + 3].toUByte().toUInt() shl 24)
 }
 
 private fun readU64Le(bytes: ByteArray, offset: Int): ULong {
-    return (bytes[offset + 0].toUByte().toULong()) or
+    require(offset >= 0 && offset + 8 <= bytes.size) {
+        "readU64Le requires at least 8 bytes from offset=$offset, size=${bytes.size}"
+    }
+    return (bytes[offset].toUByte().toULong()) or
         (bytes[offset + 1].toUByte().toULong() shl 8) or
         (bytes[offset + 2].toUByte().toULong() shl 16) or
         (bytes[offset + 3].toUByte().toULong() shl 24) or

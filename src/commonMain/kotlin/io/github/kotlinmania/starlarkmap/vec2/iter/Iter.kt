@@ -91,8 +91,7 @@ class IntoIter<A, B>(
     fun nextBack(): Pair<A, B>? {
         if (front >= back) return null
         back--
-        val newLen = len()
-        val a = firstElements[front + newLen]
+        val a = firstElements[back]
         val b = secondElements[back]
         return Pair(a, b)
     }

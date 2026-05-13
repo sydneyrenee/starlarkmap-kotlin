@@ -32,6 +32,7 @@ CMDLINETOOLS_REV="${CMDLINETOOLS_REV:-14742923}"
 # (matches the existing kotlinmania convention); operator can override.
 COMPILE_SDK="${COMPILE_SDK:-34}"
 BUILD_TOOLS="${BUILD_TOOLS:-34.0.0}"
+MAX_LICENSE_PROMPTS="${MAX_LICENSE_PROMPTS:-200}"
 
 case "$(uname -s)" in
     Darwin*) OS="mac" ;;
@@ -51,7 +52,10 @@ if [ ! -x "$SDK_DIR/cmdline-tools/latest/bin/sdkmanager" ]; then
     mkdir -p "$SDK_DIR/cmdline-tools"
     TMPDIR="$(mktemp -d)"
     trap 'rm -rf "$TMPDIR"' EXIT
-    curl -fL --progress-bar "$URL" -o "$TMPDIR/$ZIP"
+    if ! curl -fL --progress-bar "$URL" -o "$TMPDIR/$ZIP"; then
+        echo "setup-android-sdk: failed to download Android command-line tools from $URL" >&2
+        exit 1
+    fi
     unzip -q "$TMPDIR/$ZIP" -d "$TMPDIR"
     # Google's zip extracts to a top-level "cmdline-tools/" directory whose
     # contents need to live at <sdk>/cmdline-tools/latest/ for sdkmanager to
@@ -78,7 +82,7 @@ echo "setup-android-sdk: accepting licenses"
 # exits cleanly, so the pipeline returns 0 when sdkmanager succeeds.
 # 200 answers is far more than the ~10 licenses sdkmanager actually prompts
 # for (header + per-package), so the stream never runs short.
-printf 'y\n%.0s' {1..200} | "$SDKMANAGER" --sdk_root="$SDK_DIR" --licenses > /dev/null
+printf 'y\n%.0s' $(seq 1 "$MAX_LICENSE_PROMPTS") | "$SDKMANAGER" --sdk_root="$SDK_DIR" --licenses > /dev/null
 
 # ---------------------------------------------------------------------------
 # Step 3: install platform + build-tools
@@ -88,10 +92,13 @@ echo "setup-android-sdk: installing platform-tools, android-${COMPILE_SDK}, buil
 # output to a log file so callers redirecting through pagers / tail are not
 # confused by the live progress, and so success/failure is auditable later.
 LOGFILE="$REPO_ROOT/.android-sdk/sdkmanager-install.log"
-"$SDKMANAGER" --sdk_root="$SDK_DIR" \
+if ! "$SDKMANAGER" --sdk_root="$SDK_DIR" \
     "platform-tools" \
     "platforms;android-${COMPILE_SDK}" \
-    "build-tools;${BUILD_TOOLS}" > "$LOGFILE" 2>&1
+    "build-tools;${BUILD_TOOLS}" > "$LOGFILE" 2>&1; then
+    echo "setup-android-sdk: SDK installation failed. Check $LOGFILE for details." >&2
+    exit 1
+fi
 echo "setup-android-sdk: install log at $LOGFILE"
 
 # ---------------------------------------------------------------------------

@@ -56,6 +56,7 @@ internal class VecMap<K, V> private constructor(
         var i = 0
         while (i < hashes.size) {
             i = findHashInArray(hashes, hash, i) ?: return null
+            if (i >= pairs.size) return null
             if (eq(pairs[i].first)) return i
             i += 1
         }
@@ -121,6 +122,12 @@ internal class VecMap<K, V> private constructor(
 
     fun values(): Sequence<V> = buckets.firstElements().asSequence().map { it.second }
 
+    /**
+     * Porting compatibility with Rust's `values_mut`.
+     *
+     * Kotlin does not have Rust-style mutable reference iterators, so this method
+     * intentionally returns the same sequence as [values].
+     */
     fun valuesMut(): Sequence<V> = values()
 
     fun keys(): Sequence<K> = buckets.firstElements().asSequence().map { it.first }
@@ -139,7 +146,8 @@ internal class VecMap<K, V> private constructor(
 
     fun iterMut(): Sequence<Pair<K, V>> = buckets.firstElementsMut().asSequence()
 
-    fun iterMutUnchecked(): Sequence<Pair<K, V>> = buckets.firstElementsMut().asSequence()
+    /** Compatibility alias: currently equivalent to [iterMut]. */
+    fun iterMutUnchecked(): Sequence<Pair<K, V>> = iterMut()
 
     /** Equal if entries are equal in the iterator order. */
     fun eqOrdered(other: VecMap<K, V>): Boolean {
