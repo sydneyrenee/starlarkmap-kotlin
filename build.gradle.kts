@@ -216,7 +216,7 @@ mavenPublishing {
 
     pom {
         name.set("starlarkmap-kotlin")
-        description.set("Kotlin Multiplatform port of facebook/starlark-rus - Map and set implementations using hash and ordering")
+        description.set("Kotlin Multiplatform port of facebook/starlark-rust starlark_map - Map and set implementations using hash and ordering")
         inceptionYear.set("2026")
         url.set("https://github.com/KotlinMania/starlarkmap-kotlin")
 

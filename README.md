@@ -4,9 +4,9 @@
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.kotlinmania/starlarkmap-kotlin)](https://central.sonatype.com/artifact/io.github.kotlinmania/starlarkmap-kotlin)
 [![Build status](https://img.shields.io/github/actions/workflow/status/KotlinMania/starlarkmap-kotlin/ci.yml?branch=main)](https://github.com/KotlinMania/starlarkmap-kotlin/actions)
 
-This is a Kotlin Multiplatform line-by-line transliteration port of [`facebook/starlark-rus`](https://github.com/facebook/starlark-rust).
+This is a Kotlin Multiplatform line-by-line transliteration port of [`facebook/starlark-rust`](https://github.com/facebook/starlark-rust/tree/main/starlark_map).
 
-**Original Project:** This port is based on [`facebook/starlark-rus`](https://github.com/facebook/starlark-rust). All design credit and project intent belong to the upstream authors; this repository is a faithful port to Kotlin Multiplatform with no behavioural changes intended.
+**Original Project:** This port is based on [`facebook/starlark-rust`](https://github.com/facebook/starlark-rust/tree/main/starlark_map). All design credit and project intent belong to the upstream authors; this repository is a faithful port to Kotlin Multiplatform with no behavioural changes intended.
 
 ### Porting status
 
@@ -47,11 +47,11 @@ See [AGENTS.md](AGENTS.md) and [CLAUDE.md](CLAUDE.md) for translator discipline,
 
 ### License
 
-This Kotlin port is distributed under the same Apache-2.0 license as the upstream [`facebook/starlark-rus`](https://github.com/facebook/starlark-rust). See [LICENSE](LICENSE) (and any sibling `LICENSE-*` / `NOTICE` files mirrored from upstream) for the full text.
+This Kotlin port is distributed under Apache-2.0. See [LICENSE](LICENSE) for the full text.
 
-Original work copyrighted by the starlark-rus authors.  
+Original work copyrighted by the `starlark_map` authors in `facebook/starlark-rust`.  
 Kotlin port: Copyright (c) 2026 Sydney Renee and The Solace Project.
 
 ### Acknowledgments
 
-Thanks to the [`facebook/starlark-rus`](https://github.com/facebook/starlark-rust) maintainers and contributors for the original Rust implementation. This port reproduces their work in Kotlin Multiplatform; bug reports about upstream design or behavior should go to the upstream repository.
+Thanks to the [`facebook/starlark-rust`](https://github.com/facebook/starlark-rust/tree/main/starlark_map) maintainers and contributors for the original Rust implementation. This port reproduces their work in Kotlin Multiplatform; bug reports about upstream design or behavior should go to the upstream repository.
